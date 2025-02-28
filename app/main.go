@@ -2,21 +2,29 @@ package main
 
 import (
 	"fmt"
-	"net"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/response"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/server"
 	"os"
 )
 
 func main() {
-	fmt.Println("Logs from your program will appear here!")
+	server := server.NewServer("0.0.0.0", "9092")
+	server.Run()
 
-	l, err := net.Listen("tcp", "0.0.0.0:9092")
+	_, err := server.Request()
 	if err != nil {
-		fmt.Println("Failed to bind to port 9092")
+		fmt.Println("Error reading message: ", err.Error())
 		os.Exit(1)
 	}
-	_, err = l.Accept()
+	messageSize := 3
+	correlationId := 7
+
+	err = server.Respond(response.NewMessage(int32(messageSize), int32(correlationId)))
 	if err != nil {
-		fmt.Println("Error accepting connection: ", err.Error())
+		fmt.Println("Error sending message: ", err.Error())
 		os.Exit(1)
 	}
+
+	fmt.Println("Message sent")
+
 }
