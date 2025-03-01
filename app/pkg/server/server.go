@@ -1,10 +1,12 @@
 package server
 
 import (
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/response"
 	"net"
 	"strings"
+
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/request"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/response"
 )
 
 type Server struct {
@@ -42,19 +44,25 @@ func (s *Server) Run() {
 	s.Connection = connection
 }
 
-// Request reads a message from the server's connection.
+// Request reads a message from the server's connection and deserializes it.
 //
-// It reads the message into a byte array of size DEFAULT_BUFFER_SIZE, and
-// returns the read bytes and an error (if any).
-func (s *Server) Request() ([]byte, error) {
-	var buffer []byte
-	buffer = make([]byte, constants.DEFAULT_BUFFER_SIZE)
-	_, err := s.Connection.Read(buffer)
+// It reads data from the connection until it reads a full message, and then
+// deserializes the message from the data.
+//
+// If reading or deserialization fails, it returns an error.
+func (s *Server) Request() (*request.Message, error) {
+	var data []byte
+	var err error
+
+	data = make([]byte, constants.DEFAULT_BUFFER_SIZE)
+	_, err = s.Connection.Read(data)
 	if err != nil {
 		return nil, err
 	}
 
-	return buffer, nil
+	message, err := request.DeserializeMessage(data)
+
+	return message, err
 }
 
 // Respond sends a serialized message over the server's connection.
