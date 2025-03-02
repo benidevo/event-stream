@@ -4,9 +4,9 @@ import (
 	"net"
 	"strings"
 
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/interfaces"
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/request"
+	"github.com/codecrafters-io/kafka-starter-go/pkg/constants"
+	"github.com/codecrafters-io/kafka-starter-go/pkg/interfaces"
+	"github.com/codecrafters-io/kafka-starter-go/pkg/request"
 )
 
 type Server struct {
