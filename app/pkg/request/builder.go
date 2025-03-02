@@ -1,27 +1,15 @@
 package request
 
-import (
-	"encoding/binary"
-
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants/error_codes"
-)
-
-func MessageBuilder(data []byte) (*Message, int16) {
-	apiVersion := extractApiVersion(data)
-
-	if apiVersion < constants.MIN_SUPPORTED_API_VERSION || apiVersion > constants.MAX_SUPPORTED_API_VERSION {
-		return nil, error_codes.UNSUPPORTED_VERSION
-	}
-
+// MessageBuilder constructs a Request Message from a byte array.
+//
+// It uses DeserializeMessage to parse the byte array into a Request Message.
+// Returns the constructed Request Message or an error if deserialization fails.
+func MessageBuilder(data []byte) (*Message, error) {
 	message, error := DeserializeMessage(data)
 	if error != nil {
-		return nil, error_codes.INVALID_REQUEST
+		return nil, error
+
 	}
 
-	return message, error_codes.NONE
-}
-
-func extractApiVersion(data []byte) int16 {
-	return int16(binary.BigEndian.Uint16(data[6:8]))
+	return message, nil
 }

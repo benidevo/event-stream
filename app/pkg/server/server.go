@@ -5,9 +5,8 @@ import (
 	"strings"
 
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants/error_codes"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/interfaces"
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/request"
-	"github.com/codecrafters-io/kafka-starter-go/app/pkg/response"
 )
 
 type Server struct {
@@ -45,12 +44,11 @@ func (s *Server) Run() {
 	s.Connection = connection
 }
 
-// Request reads a message from the server's connection and deserializes it.
+// Request reads data from the server's connection and constructs a request.Message.
 //
-// It reads data from the connection until it reads a full message, and then
-// deserializes the message from the data.
-//
-// If reading or deserialization fails, it returns an error.
+// It attempts to read a byte array from the connection using a predefined buffer size.
+// The byte array is then deserialized into a request.Message using the MessageBuilder function.
+// Returns the constructed request.Message or an error if reading from the connection or deserialization fails.
 func (s *Server) Request() (*request.Message, error) {
 	var data []byte
 	var err error
@@ -60,19 +58,19 @@ func (s *Server) Request() (*request.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	request_message, _ := request.MessageBuilder(data)
+	request_message, err := request.MessageBuilder(data)
 
 	return request_message, nil
-
-
-
 }
 
-// Respond sends a serialized message over the server's connection.
+// Respond sends a serialized response message over the server's connection.
 //
-// It serializes the provided message and writes the serialized bytes to the connection.
-// If serialization or writing fails, it returns an error.
-func (s *Server) Respond(message *response.Message) error {
+// It takes a ResponseMessage interface, serializes it into a byte array,
+// and writes the byte array to the server's connection. If serialization
+// or writing to the connection fails, it returns an error.
+//
+// Returns nil on success or an error on failure.
+func (s *Server) Respond(message interfaces.ResponseMessage) error {
 
 	serializedMessage, err := message.Serialize()
 	if err != nil {
