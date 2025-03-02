@@ -1,5 +1,5 @@
 #!/bin/sh
 
-set -e # Exit on failure
+set -e
 
 go build -o /tmp/codecrafters-build-kafka-go app/*.go

@@ -3,4 +3,7 @@ package constants
 const (
 	PROTOCOL            = "tcp"
 	DEFAULT_BUFFER_SIZE = 1024
+
+	MIN_SUPPORTED_API_VERSION = 0
+	MAX_SUPPORTED_API_VERSION = 4
 )

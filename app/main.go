@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/response"
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/server"
+	// "github.com/codecrafters-io/kafka-starter-go/app/pkg/server"
 	"os"
 )
 
@@ -17,9 +19,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	messageSize := 4
+	api_key := requestMessage.ApiKey
+	if constants.ApiKeyNames[api_key] != "" {
+		fmt.Println("API Key: ", constants.ApiKeyNames[api_key])
+	}
 
-	err = server.Respond(response.NewMessage(int32(messageSize), requestMessage.CorrelationId))
+	response_message := response.MessageBuilder(requestMessage)
+
+	err = server.Respond(response_message)
 	if err != nil {
 		fmt.Println("Error sending message: ", err.Error())
 		os.Exit(1)

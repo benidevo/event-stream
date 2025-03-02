@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants"
+	"github.com/codecrafters-io/kafka-starter-go/app/pkg/constants/error_codes"
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/request"
 	"github.com/codecrafters-io/kafka-starter-go/app/pkg/response"
 )
@@ -59,10 +60,12 @@ func (s *Server) Request() (*request.Message, error) {
 	if err != nil {
 		return nil, err
 	}
+	request_message, _ := request.MessageBuilder(data)
 
-	message, err := request.DeserializeMessage(data)
+	return request_message, nil
 
-	return message, err
+
+
 }
 
 // Respond sends a serialized message over the server's connection.
