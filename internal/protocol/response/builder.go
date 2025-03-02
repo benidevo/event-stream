@@ -1,10 +1,10 @@
 package response
 
 import (
+	"github.com/codecrafters-io/kafka-starter-go/internal/protocol/request"
+	"github.com/codecrafters-io/kafka-starter-go/internal/protocol/response/v4"
 	"github.com/codecrafters-io/kafka-starter-go/pkg/constants/error_codes"
 	"github.com/codecrafters-io/kafka-starter-go/pkg/interfaces"
-	"github.com/codecrafters-io/kafka-starter-go/pkg/request"
-	"github.com/codecrafters-io/kafka-starter-go/pkg/response/v4"
 )
 
 const (

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/kafka-starter-go/pkg/response"
-	"github.com/codecrafters-io/kafka-starter-go/pkg/server"
+	"github.com/codecrafters-io/kafka-starter-go/internal/protocol/response"
+	"github.com/codecrafters-io/kafka-starter-go/internal/server"
 	"os"
 )
 
