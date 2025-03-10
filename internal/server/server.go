@@ -1,10 +1,12 @@
 package server
 
 import (
+	"fmt"
 	"net"
 	"strings"
 
 	"github.com/codecrafters-io/kafka-starter-go/internal/protocol/request"
+	"github.com/codecrafters-io/kafka-starter-go/internal/protocol/response"
 	"github.com/codecrafters-io/kafka-starter-go/pkg/constants"
 	"github.com/codecrafters-io/kafka-starter-go/pkg/interfaces"
 )
@@ -42,6 +44,10 @@ func (s *Server) Run() {
 	}
 
 	s.Connection = connection
+
+	defer s.Shutdown()
+
+	s.stream()
 }
 
 // Request reads data from the server's connection and constructs a request.Message.
@@ -84,6 +90,26 @@ func (s *Server) Respond(message interfaces.ResponseMessage) error {
 
 	return nil
 
+}
+
+func (s *Server) stream() {
+	var err error
+	for {
+		requestMessage, _ := s.Request()
+		if err != nil {
+			fmt.Println("Error reading message: ", err.Error())
+			continue // TODO: return error response
+		}
+
+		response_message := response.MessageBuilder(requestMessage)
+
+		err = s.Respond(response_message)
+		if err != nil {
+			fmt.Println("Error sending message: ", err.Error())
+			continue
+		}
+
+	}
 }
 
 // Shutdown closes the connection of the server.
